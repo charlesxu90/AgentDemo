@@ -63,7 +63,7 @@ class ChatStreamManager:
                     "Supported schemes: mongodb://, postgresql://, postgres://"
                 )
         else:
-            self.logger.warning("Checkpoint saver is disabled")
+            self.logger.debug("Checkpoint saver is disabled")
 
     def _init_mongodb(self) -> None:
         """Initialize MongoDB connection."""
@@ -204,7 +204,7 @@ class ChatStreamManager:
                 return False
 
             if not self.checkpoint_saver:
-                self.logger.warning("Checkpoint saver is disabled")
+                self.logger.debug("Checkpoint saver is disabled")
                 return False
 
             # Choose persistence method based on available connection
@@ -368,5 +368,6 @@ def chat_stream_message(thread_id: str, message: str, finish_reason: str) -> boo
             thread_id, message, finish_reason
         )
     else:
-        logging.warning("Checkpoint saver is disabled, message not processed")
+        # Use debug level instead of warning to reduce noise
+        logging.debug("Checkpoint saver is disabled, message not processed")
         return False

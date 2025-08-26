@@ -44,8 +44,8 @@ logger = logging.getLogger(__name__)
 INTERNAL_SERVER_ERROR_DETAIL = "Internal Server Error"
 
 app = FastAPI(
-    title="AgentDemo API",
-    description="API for Deer",
+    title="DeepResearch API",
+    description="API for Deep Research",
     version="0.1.0",
 )
 
@@ -59,9 +59,9 @@ logger.info(f"Allowed origins: {allowed_origins}")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,  # Restrict to specific origins
+    allow_origins=["*"],  # Temporarily allow all origins for debugging
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],  # Use the configured list of methods
+    allow_methods=["GET", "POST", "OPTIONS", "PUT", "DELETE"],  # Add more methods
     allow_headers=["*"],  # Now allow all headers, but can be restricted further
 )
 in_memory_store = InMemoryStore()
@@ -161,13 +161,33 @@ def _create_event_stream_message(
 
 def _create_interrupt_event(thread_id, event_data):
     """Create interrupt event."""
+    interrupt_obj = event_data["__interrupt__"][0]
+    
+    # Handle different Interrupt object structures with better error handling
+    try:
+        # Try the new structure first
+        interrupt_id = getattr(interrupt_obj, 'id', None)
+        if interrupt_id is None:
+            # Try the old structure
+            if hasattr(interrupt_obj, 'ns') and interrupt_obj.ns:
+                interrupt_id = interrupt_obj.ns[0]
+            else:
+                interrupt_id = "interrupt"
+        
+        interrupt_value = getattr(interrupt_obj, 'value', str(interrupt_obj))
+        
+    except Exception as e:
+        logger.warning(f"Error accessing interrupt object attributes: {e}")
+        interrupt_id = "interrupt"
+        interrupt_value = str(interrupt_obj)
+    
     return _make_event(
         "interrupt",
         {
             "thread_id": thread_id,
-            "id": event_data["__interrupt__"][0].ns[0],
+            "id": interrupt_id,
             "role": "assistant",
-            "content": event_data["__interrupt__"][0].value,
+            "content": interrupt_value,
             "finish_reason": "interrupt",
             "options": [
                 {"text": "Edit plan", "value": "edit_plan"},
