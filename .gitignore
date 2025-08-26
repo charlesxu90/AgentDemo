@@ -29,6 +29,9 @@ conf.yaml
 coverage.xml
 coverage/
 
+# web
+.next/
+node_modules/
 
 # others
 results/
