@@ -26,7 +26,7 @@ pnpm dev
 ```
 
 
-## Web interface run
+## Deployment
 ```shell
 
 ```
