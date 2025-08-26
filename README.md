@@ -34,4 +34,4 @@ pnpm dev
 ## Acknowledgement
 
 Some codes are adapted from [Deer-Flow](https://github.com/bytedance/deer-flow) and [Open-Deep-Research](https://github.com/langchain-ai/open_deep_research).
-We thank the contributors for their fantastic project.
+We thank the contributors for their fantastic projects.
