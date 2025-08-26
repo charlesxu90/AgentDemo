@@ -4,9 +4,7 @@ import logging
 from typing import Annotated, List, cast
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response, StreamingResponse
+
 from langchain_core.messages import AIMessageChunk, BaseMessage, ToolMessage
 from langgraph.types import Command
 from langgraph.store.memory import InMemoryStore
@@ -14,26 +12,13 @@ from langgraph.checkpoint.mongodb import AsyncMongoDBSaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from psycopg_pool import AsyncConnectionPool
 
-from src.config.configuration import get_recursion_limit, get_bool_env, get_str_env
-from src.config.report_style import ReportStyle
-from src.config.tools import SELECTED_RAG_PROVIDER
-from src.graph.builder import build_graph_with_memory
-from src.llms.llm import get_configured_llm_models
-from src.podcast.graph.builder import build_graph as build_podcast_graph
-from src.ppt.graph.builder import build_graph as build_ppt_graph
-from src.prompt_enhancer.graph.builder import build_graph as build_prompt_enhancer_graph
-from src.prose.graph.builder import build_graph as build_prose_graph
-from src.rag.builder import build_retriever
-from src.rag.retriever import Resource
-from src.server.chat_request import (
-    ChatRequest,
-    EnhancePromptRequest,
-    GeneratePodcastRequest,
-    GeneratePPTRequest,
-    GenerateProseRequest,
-    TTSRequest,
-)
+
+# pure server imports
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response, StreamingResponse
 from src.server.config_request import ConfigResponse
+from src.server.chat_request import ChatRequest, EnhancePromptRequest
 from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataResponse
 from src.server.mcp_utils import load_mcp_tools
 from src.server.rag_request import (
@@ -41,9 +26,18 @@ from src.server.rag_request import (
     RAGResourceRequest,
     RAGResourcesResponse,
 )
-from src.tools import VolcengineTTS
-from src.graph.checkpoint import chat_stream_message
-from src.utils.json_utils import sanitize_args
+
+# agent imports
+from src.deer_flow.config.configuration import get_recursion_limit, get_bool_env, get_str_env
+from src.deer_flow.config.report_style import ReportStyle
+from src.deer_flow.config.tools import SELECTED_RAG_PROVIDER
+from src.deer_flow.graph.builder import build_graph_with_memory
+from src.deer_flow.graph.checkpoint import chat_stream_message
+from src.deer_flow.llms.llm import get_configured_llm_models
+from src.deer_flow.prompt_enhancer.builder import build_graph as build_prompt_enhancer_graph
+from src.deer_flow.rag.builder import build_retriever
+from src.deer_flow.rag.retriever import Resource
+from src.deer_flow.utils.json_utils import sanitize_args
 
 logger = logging.getLogger(__name__)
 
@@ -369,119 +363,6 @@ def _make_event(event_type: str, data: dict[str, any]):
         # Return a safe error event
         error_data = json.dumps({"error": "Serialization failed"}, ensure_ascii=False)
         return f"event: error\ndata: {error_data}\n\n"
-
-
-@app.post("/api/tts")
-async def text_to_speech(request: TTSRequest):
-    """Convert text to speech using volcengine TTS API."""
-    app_id = get_str_env("VOLCENGINE_TTS_APPID", "")
-    if not app_id:
-        raise HTTPException(status_code=400, detail="VOLCENGINE_TTS_APPID is not set")
-    access_token = get_str_env("VOLCENGINE_TTS_ACCESS_TOKEN", "")
-    if not access_token:
-        raise HTTPException(
-            status_code=400, detail="VOLCENGINE_TTS_ACCESS_TOKEN is not set"
-        )
-
-    try:
-        cluster = get_str_env("VOLCENGINE_TTS_CLUSTER", "volcano_tts")
-        voice_type = get_str_env("VOLCENGINE_TTS_VOICE_TYPE", "BV700_V2_streaming")
-
-        tts_client = VolcengineTTS(
-            appid=app_id,
-            access_token=access_token,
-            cluster=cluster,
-            voice_type=voice_type,
-        )
-        # Call the TTS API
-        result = tts_client.text_to_speech(
-            text=request.text[:1024],
-            encoding=request.encoding,
-            speed_ratio=request.speed_ratio,
-            volume_ratio=request.volume_ratio,
-            pitch_ratio=request.pitch_ratio,
-            text_type=request.text_type,
-            with_frontend=request.with_frontend,
-            frontend_type=request.frontend_type,
-        )
-
-        if not result["success"]:
-            raise HTTPException(status_code=500, detail=str(result["error"]))
-
-        # Decode the base64 audio data
-        audio_data = base64.b64decode(result["audio_data"])
-
-        # Return the audio file
-        return Response(
-            content=audio_data,
-            media_type=f"audio/{request.encoding}",
-            headers={
-                "Content-Disposition": (
-                    f"attachment; filename=tts_output.{request.encoding}"
-                )
-            },
-        )
-
-    except Exception as e:
-        logger.exception(f"Error in TTS endpoint: {str(e)}")
-        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
-
-
-@app.post("/api/podcast/generate")
-async def generate_podcast(request: GeneratePodcastRequest):
-    try:
-        report_content = request.content
-        print(report_content)
-        workflow = build_podcast_graph()
-        final_state = workflow.invoke({"input": report_content})
-        audio_bytes = final_state["output"]
-        return Response(content=audio_bytes, media_type="audio/mp3")
-    except Exception as e:
-        logger.exception(f"Error occurred during podcast generation: {str(e)}")
-        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
-
-
-@app.post("/api/ppt/generate")
-async def generate_ppt(request: GeneratePPTRequest):
-    try:
-        report_content = request.content
-        print(report_content)
-        workflow = build_ppt_graph()
-        final_state = workflow.invoke({"input": report_content})
-        generated_file_path = final_state["generated_file_path"]
-        with open(generated_file_path, "rb") as f:
-            ppt_bytes = f.read()
-        return Response(
-            content=ppt_bytes,
-            media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        )
-    except Exception as e:
-        logger.exception(f"Error occurred during ppt generation: {str(e)}")
-        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
-
-
-@app.post("/api/prose/generate")
-async def generate_prose(request: GenerateProseRequest):
-    try:
-        sanitized_prompt = request.prompt.replace("\r\n", "").replace("\n", "")
-        logger.info(f"Generating prose for prompt: {sanitized_prompt}")
-        workflow = build_prose_graph()
-        events = workflow.astream(
-            {
-                "content": request.prompt,
-                "option": request.option,
-                "command": request.command,
-            },
-            stream_mode="messages",
-            subgraphs=True,
-        )
-        return StreamingResponse(
-            (f"data: {event[0].content}\n\n" async for _, event in events),
-            media_type="text/event-stream",
-        )
-    except Exception as e:
-        logger.exception(f"Error occurred during prose generation: {str(e)}")
-        raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
 
 
 @app.post("/api/prompt/enhance")

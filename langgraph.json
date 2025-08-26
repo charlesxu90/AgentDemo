@@ -1,14 +1,15 @@
 {
-    "dockerfile_lines": [],
-    "graphs": {
-      "Deep Researcher": "./src/deep_research/deep_researcher.py:deep_researcher"
-    },
-    "python_version": "3.11",
-    "env": "./.env",
-    "dependencies": [
-      "."
-    ],
-    "auth": {
-      "path": "./src/auth.py:auth"
-    }
+  "dockerfile_lines": [],
+  "graphs": {
+    "Deep Researcher": "./src/deep_research/deep_researcher.py:deep_researcher",
+    "Deer Flow": "./src/deer_flow/workflow.py:graph"
+  },
+  "python_version": "3.12",
+  "env": "./.env",
+  "dependencies": [
+    "."
+  ],
+  "auth": {
+    "path": "./src/auth.py:auth"
+  }
 }

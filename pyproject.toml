@@ -69,13 +69,22 @@ requires = ["setuptools>=73.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["deep_research"]
+packages = ["deep_research", "deer_flow"]
 
 [tool.setuptools.package-dir]
 "deep_research" = "src/deep_research"
+"deer_flow" = "src/deer_flow"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 # for documentation
 [tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py312"
+extend-include = ["*.pyi"]
+
 lint.select = [
     "E",    # pycodestyle
     "F",    # pyflakes
@@ -98,3 +107,8 @@ lint.ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "auto"
+exclude = ['^/build/']

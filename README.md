@@ -16,9 +16,10 @@ uv sync # uv pip install -r pyproject.toml
 ## Debug
 ```shell
 # debug backend with langsmith
-uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev --allow-blocking
+uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.12 langgraph dev --allow-blocking
 
 # debug frontend
+cd web/
 pnpm dev
 
 # debug the whole
@@ -28,7 +29,10 @@ pnpm dev
 
 ## Deployment
 ```shell
+    "Deep Researcher": "./src/deep_research/deep_researcher.py:deep_researcher",
 
+    // "Deer Flow": "./src/deer_flow/workflow.py:graph",
+    // "PPT Generation": "./src/ppt/graph/builder.py:workflow"
 ```
 
 ## Acknowledgement
