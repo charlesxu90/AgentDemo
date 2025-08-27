@@ -8,13 +8,13 @@ import Script from "next/script";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
-import { ThemeProviderWrapper } from "~/components/deer-flow/theme-provider-wrapper";
+import { ThemeProviderWrapper } from "~/components/deep-research/theme-provider-wrapper";
 import { env } from "~/env";
 
-import { Toaster } from "../components/deer-flow/toaster";
+import { Toaster } from "../components/deep-research/toaster";
 
 export const metadata: Metadata = {
-  title: "🦌 DeerFlow",
+  title: "🦌 DeepResearcch",
   description:
     "Deep Exploration and Efficient Research, an AI tool that combines language models with specialized tools for research tasks.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],

@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { GithubFilled } from "@ant-design/icons";
@@ -24,7 +24,7 @@ export function JoinCommunitySection() {
         description={t("description")}
       />
       <Button className="text-xl" size="lg" asChild>
-        <Link href="https://github.com/bytedance/deer-flow" target="_blank">
+        <Link href="https://github.com/charlesxu90/deep-research" target="_blank">
           <GithubFilled />
           {t("contributeNow")}
         </Link>

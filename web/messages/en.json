@@ -16,21 +16,21 @@
     "placeholderWithRag": "What can I do for you? \nYou may refer to RAG resources by using @."
   },
   "header": {
-    "title": "AgentDemo"
+    "title": "DeepResearcch"
   },
   "hero": {
     "title": "Agent Demo",
     "subtitle": "for general agentic AI developments",
-    "description": "Meet AgentDemo, a common agentic AI framework, with powerful tools like search engines, web crawlers, Python and MCP services, it delivers instant insights, comprehensive reports.",
+    "description": "Meet DeepResearcch, a common agentic AI framework, with powerful tools like search engines, web crawlers, Python and MCP services, it delivers instant insights, comprehensive reports.",
     "footnote": ""
   },
   "settings": {
-    "title": "AgentDemo Settings",
-    "description": "Manage your AgentDemo settings here.",
+    "title": "DeepResearcch Settings",
+    "description": "Manage your DeepResearcch settings here.",
     "addServers": "Add Servers",
     "cancel": "Cancel",
     "addNewMCPServers": "Add New MCP Servers",
-    "mcpConfigDescription": "AgentDemo uses the standard JSON MCP config to create a new server.",
+    "mcpConfigDescription": "DeepResearcch uses the standard JSON MCP config to create a new server.",
     "pasteConfigBelow": "Paste your config below and click \"Add\" to add new servers.",
     "add": "Add",
     "general": {
@@ -45,7 +45,7 @@
     },
     "mcp": {
       "title": "MCP Servers",
-      "description": "The Model Context Protocol boosts AgentDemo by integrating external tools for tasks like private domain searches, web browsing, food ordering, and more. Click here to",
+      "description": "The Model Context Protocol boosts DeepResearcch by integrating external tools for tasks like private domain searches, web browsing, food ordering, and more. Click here to",
       "learnMore": "learn more about MCP.",
       "enableDisable": "Enable/disable server",
       "deleteServer": "Delete server",
@@ -62,27 +62,23 @@
       "academic": "Academic",
       "academicDesc": "Formal, objective, and analytical with precise terminology",
       "popularScience": "Popular Science",
-      "popularScienceDesc": "Engaging and accessible for general audience",
-      "news": "News",
-      "newsDesc": "Factual, concise, and impartial journalistic style",
-      "socialMedia": "Social Media",
-      "socialMediaDesc": "Concise, attention-grabbing, and shareable"
+      "popularScienceDesc": "Engaging and accessible for general audience"
     }
   },
   "footer": {
     "quote": "Originated from Open Source, give back to Open Source.",
     "license": "Licensed under MIT License",
-    "copyright": "AgentDemo"
+    "copyright": "DeepResearcch"
   },
   "chat": {
     "page": {
-        "loading": "Loading AgentDemo...",
+        "loading": "Loading DeepResearcch...",
         "welcomeUser": "Welcome, {username}",
-        "starOnGitHub": "Star AgentDemo on GitHub"
+        "starOnGitHub": "Star DeepResearcch on GitHub"
     },
     "welcome": {
       "greeting": "👋 Hello, there!",
-      "description": "Welcome to 🦌 AgentDemo, a general agentic AI framework built on cutting-edge language models, helps you quickly start agentic AI tasks."
+      "description": "Welcome to 🦌 DeepResearcch, a general agentic AI framework built on cutting-edge language models, helps you quickly start agentic AI tasks."
     },
     "conversationStarters": [
       "How many times taller is the Eiffel Tower than the tallest building in the world?",
@@ -94,12 +90,12 @@
       "deepThinking": "Deep Thinking",
       "deepThinkingTooltip": {
         "title": "Deep Thinking Mode: {status}",
-        "description": "When enabled, AgentDemo will use reasoning model ({model}) to generate more thoughtful plans."
+        "description": "When enabled, DeepResearcch will use reasoning model ({model}) to generate more thoughtful plans."
       },
       "investigation": "Investigation",
       "investigationTooltip": {
         "title": "Investigation Mode: {status}",
-        "description": "When enabled, AgentDemo will perform a quick search before planning. This is useful for researches related to ongoing events and news."
+        "description": "When enabled, DeepResearcch will perform a quick search before planning. This is useful for researches related to ongoing events and news."
       },
       "enhancePrompt": "Enhance prompt with AI",
       "on": "On",
@@ -134,9 +130,9 @@
     },
     "messages": {
       "replaying": "Replaying",
-      "replayDescription": "AgentDemo is now replaying the conversation...",
+      "replayDescription": "DeepResearcch is now replaying the conversation...",
       "replayHasStopped": "The replay has been stopped.",
-      "replayModeDescription": "You're now in AgentDemo's replay mode. Click the \"Play\" button on the right to start.",
+      "replayModeDescription": "You're now in DeepResearcch's replay mode. Click the \"Play\" button on the right to start.",
       "play": "Play",
       "fastForward": "Fast Forward",
       "demoNotice": "* This site is for demo purposes only. If you want to try your own question, please",
@@ -153,7 +149,7 @@
   "landing": {
     "caseStudies": {
       "title": "Case Studies",
-      "description": "See AgentDemo in action through replays.",
+      "description": "See DeepResearcch in action through replays.",
       "clickToWatch": "Click to watch replay",
       "cases": [
         {
@@ -192,7 +188,7 @@
     },
     "coreFeatures": {
       "title": "Core Features",
-      "description": "Find out what makes AgentDemo effective.",
+      "description": "Find out what makes DeepResearcch effective.",
       "features": [
         {
           "name": "Dive Deeper and Reach Wider",

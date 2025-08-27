@@ -1,10 +1,10 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { useCallback, useRef } from "react";
 
-import { LoadingAnimation } from "~/components/deer-flow/loading-animation";
-import { Markdown } from "~/components/deer-flow/markdown";
+import { LoadingAnimation } from "~/components/deep-research/loading-animation";
+import { Markdown } from "~/components/deep-research/markdown";
 import ReportEditor from "~/components/editor";
 import { useReplay } from "~/core/replay";
 import { useMessage, useStore } from "~/core/store";

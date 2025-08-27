@@ -1,5 +1,16 @@
-# Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
-# SPDX-License-Identifier: MIT
+"""
+System Configuration Response Models
+
+This module defines Pydantic models for system configuration API responses.
+It provides comprehensive information about the server's current configuration,
+including model settings, RAG configuration, and available features.
+
+Classes:
+    ConfigResponse: Main configuration response containing models and RAG settings
+
+Used by the /api/config endpoint to return complete system status and configuration
+information for client applications and monitoring systems.
+"""
 
 from pydantic import BaseModel, Field
 

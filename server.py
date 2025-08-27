@@ -1,8 +1,8 @@
-# Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+# Copyright (c) 2025 charlesxu90
 # SPDX-License-Identifier: MIT
 
 """
-Server script for running the AgentDemo API.
+Server script for running the DeepResearcch API.
 """
 import os
 import asyncio
@@ -45,7 +45,7 @@ signal.signal(signal.SIGINT, handle_shutdown)
 
 if __name__ == "__main__":
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description="Run the AgentDemo API server")
+    parser = argparse.ArgumentParser(description="Run the DeepResearcch API server")
     parser.add_argument(
         "--reload",
         action="store_true",
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         reload = True
 
     try:
-        logger.info(f"Starting AgentDemo API server on {args.host}:{args.port}")
+        logger.info(f"Starting DeepResearcch API server on {args.host}:{args.port}")
         uvicorn.run(
             "src.server:app",
             host=args.host,

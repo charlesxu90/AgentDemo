@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { GithubFilled } from "@ant-design/icons";
@@ -53,7 +53,7 @@ export function Jumbotron() {
               }
               href={
                 env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY
-                  ? "https://github.com/bytedance/deer-flow"
+                  ? "https://github.com/charlesxu90/deep-research"
                   : "/chat"
               }
             >
@@ -68,7 +68,7 @@ export function Jumbotron() {
               asChild
             >
               <Link
-                href="https://github.com/bytedance/deer-flow"
+                href="https://github.com/charlesxu90/deep-research"
                 target="_blank"
               >
                 <GithubFilled />

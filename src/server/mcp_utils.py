@@ -1,5 +1,21 @@
-# Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
-# SPDX-License-Identifier: MIT
+"""
+Model Context Protocol (MCP) Utility Functions
+
+This module provides utility functions for connecting to and interacting with
+MCP (Model Context Protocol) servers. It handles different transport methods
+and manages tool discovery and loading from external MCP-compatible services.
+
+Functions:
+    load_mcp_tools: Main function to connect to MCP servers and load available tools
+    _create_stdio_session: Create stdio-based MCP client session
+    _create_sse_session: Create Server-Sent Events based MCP client session  
+    _create_http_session: Create HTTP streaming based MCP client session
+    _extract_tools_from_session: Extract and format tools from MCP session
+
+Supports multiple transport protocols for maximum compatibility with different
+MCP server implementations. Includes error handling, timeout management, and
+tool metadata extraction for seamless integration with the AI system.
+"""
 
 import logging
 from datetime import timedelta

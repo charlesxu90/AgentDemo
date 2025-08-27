@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { MagicWandIcon } from "@radix-ui/react-icons";
@@ -7,12 +7,12 @@ import { ArrowUp, Lightbulb, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useRef, useState } from "react";
 
-import { Detective } from "~/components/deer-flow/icons/detective";
+import { Detective } from "~/components/deep-research/icons/detective";
 import MessageInput, {
   type MessageInputRef,
-} from "~/components/deer-flow/message-input";
-import { ReportStyleDialog } from "~/components/deer-flow/report-style-dialog";
-import { Tooltip } from "~/components/deer-flow/tooltip";
+} from "~/components/deep-research/message-input";
+import { ReportStyleDialog } from "~/components/deep-research/report-style-dialog";
+import { Tooltip } from "~/components/deep-research/tooltip";
 import { BorderBeam } from "~/components/magicui/border-beam";
 import { Button } from "~/components/ui/button";
 import { enhancePrompt } from "~/core/api";

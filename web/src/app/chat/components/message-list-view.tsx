@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { LoadingOutlined } from "@ant-design/icons";
@@ -14,15 +14,15 @@ import {
 import { useTranslations } from "next-intl";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 
-import { LoadingAnimation } from "~/components/deer-flow/loading-animation";
-import { Markdown } from "~/components/deer-flow/markdown";
-import { RainbowText } from "~/components/deer-flow/rainbow-text";
-import { RollingText } from "~/components/deer-flow/rolling-text";
+import { LoadingAnimation } from "~/components/deep-research/loading-animation";
+import { Markdown } from "~/components/deep-research/markdown";
+import { RainbowText } from "~/components/deep-research/rainbow-text";
+import { RollingText } from "~/components/deep-research/rolling-text";
 import {
   ScrollContainer,
   type ScrollContainerRef,
-} from "~/components/deer-flow/scroll-container";
-import { Tooltip } from "~/components/deer-flow/tooltip";
+} from "~/components/deep-research/scroll-container";
+import { Tooltip } from "~/components/deep-research/tooltip";
 import { Button } from "~/components/ui/button";
 import {
   Card,

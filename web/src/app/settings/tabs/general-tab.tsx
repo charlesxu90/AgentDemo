@@ -37,7 +37,7 @@ const generalFormSchema = z.object({
   // Others
   enableBackgroundInvestigation: z.boolean(),
   enableDeepThinking: z.boolean(),
-  reportStyle: z.enum(["academic", "popular_science", "news", "social_media"]),
+  reportStyle: z.enum(["academic", "popular_science"]),
 });
 
 export const GeneralTab: Tab = ({

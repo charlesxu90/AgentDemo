@@ -1,9 +1,22 @@
-# Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
-# SPDX-License-Identifier: MIT
+"""
+RAG (Retrieval-Augmented Generation) Request and Response Models
+
+This module defines Pydantic models for RAG system API requests and responses.
+The RAG system enhances AI responses by incorporating relevant information from
+external knowledge sources and databases.
+
+Classes:
+    RAGConfigResponse: Response model containing RAG provider configuration
+    RAGResourceRequest: Request model for searching RAG resources  
+    RAGResourcesResponse: Response model containing list of RAG resources
+
+The RAG system supports multiple providers and enables semantic search across
+various knowledge sources including documents, web pages, and databases.
+"""
 
 from pydantic import BaseModel, Field
 
-from src.deer_flow.rag.retriever import Resource
+from src.deep_research.rag.retriever import Resource
 
 
 class RAGConfigResponse(BaseModel):

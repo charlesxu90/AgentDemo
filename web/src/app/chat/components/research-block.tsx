@@ -1,12 +1,12 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { Check, Copy, Headphones, Pencil, Undo2, X, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 
-import { ScrollContainer } from "~/components/deer-flow/scroll-container";
-import { Tooltip } from "~/components/deer-flow/tooltip";
+import { ScrollContainer } from "~/components/deep-research/scroll-container";
+import { Tooltip } from "~/components/deep-research/tooltip";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";

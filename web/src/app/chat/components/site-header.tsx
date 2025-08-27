@@ -1,11 +1,11 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { StarFilledIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useTranslations } from 'next-intl';
 
-import { LanguageSwitcher } from "~/components/deer-flow/language-switcher";
+import { LanguageSwitcher } from "~/components/deep-research/language-switcher";
 import { NumberTicker } from "~/components/magicui/number-ticker";
 import { Button } from "~/components/ui/button";
 import { env } from "~/env";
@@ -18,7 +18,7 @@ export function SiteHeader() {
       <div className="container flex h-15 items-center justify-between px-3">
         <div className="text-xl font-medium">
           <span className="mr-1 text-2xl">🦌</span>
-          <span>AgentDemo</span>
+          <span>DeepResearcch</span>
         </div>
         <div className="relative flex items-center gap-2">
           <LanguageSwitcher />
@@ -42,7 +42,7 @@ export async function StarCounter() {
 
   try {
     const response = await fetch(
-      "https://api.github.com/repos/bytedance/deer-flow",
+      "https://api.github.com/repos/charlesxu90/deep-research",
       {
         headers: env.GITHUB_OAUTH_TOKEN
           ? {

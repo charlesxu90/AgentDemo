@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { motion } from "framer-motion";
@@ -6,7 +6,7 @@ import { FastForward, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useRef, useState } from "react";
 
-import { RainbowText } from "~/components/deer-flow/rainbow-text";
+import { RainbowText } from "~/components/deep-research/rainbow-text";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -195,7 +195,7 @@ export function MessagesBlock({ className }: { className?: string }) {
                 {t("demoNotice")}{" "}
                 <a
                   className="underline"
-                  href="https://github.com/bytedance/deer-flow"
+                  href="https://github.com/charlesxu90/deep-research"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

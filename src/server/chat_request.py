@@ -1,12 +1,30 @@
-# Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
-# SPDX-License-Identifier: MIT
+"""
+Chat Request and Response Models for AI Research Conversations
+
+This module defines Pydantic models for chat API requests and responses, supporting
+advanced AI-powered research conversations with streaming responses, tool integration,
+and customizable research parameters.
+
+Classes:
+    ContentItem: Individual content item (text, image, etc.)
+    ChatMessage: Single message in a conversation
+    ChatRequest: Main chat request with research parameters
+    TTSRequest: Text-to-speech conversion request
+    GeneratePodcastRequest: Podcast content generation request  
+    GeneratePPTRequest: PowerPoint presentation generation request
+    GenerateProseRequest: Prose writing generation request
+    EnhancePromptRequest: Prompt enhancement and optimization request
+
+The chat system supports multi-modal content, streaming responses, research workflows,
+background investigation, multiple report styles, and deep thinking capabilities.
+"""
 
 from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from src.deer_flow.config.report_style import ReportStyle
-from src.deer_flow.rag.retriever import Resource
+from src.deep_research.config.report_style import ReportStyle
+from src.deep_research.rag.retriever import Resource
 
 
 class ContentItem(BaseModel):

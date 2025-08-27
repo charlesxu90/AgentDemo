@@ -25,14 +25,11 @@ pnpm dev
 # debug the whole
 ./bootstrap.sh -d
 ```
-
+## View APIs
+Open in browser with this link: http://localhost:8000/redoc
 
 ## Deployment
 ```shell
-    "Deep Researcher": "./src/deep_research/deep_researcher.py:deep_researcher",
-
-    // "Deer Flow": "./src/deer_flow/workflow.py:graph",
-    // "PPT Generation": "./src/ppt/graph/builder.py:workflow"
 ```
 
 ## Acknowledgement

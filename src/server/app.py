@@ -29,16 +29,16 @@ from src.server.rag_request import (
 )
 
 # agent imports
-from src.deer_flow.config.configuration import get_recursion_limit, get_bool_env, get_str_env
-from src.deer_flow.config.report_style import ReportStyle
-from src.deer_flow.config.tools import SELECTED_RAG_PROVIDER
-from src.deer_flow.graph.builder import build_graph_with_memory
-from src.deer_flow.graph.checkpoint import chat_stream_message
-from src.deer_flow.llms.llm import get_configured_llm_models
-from src.deer_flow.prompt_enhancer.builder import build_graph as build_prompt_enhancer_graph
-from src.deer_flow.rag.builder import build_retriever
-from src.deer_flow.rag.retriever import Resource
-from src.deer_flow.utils.json_utils import sanitize_args
+from src.deep_research.config.configuration import get_recursion_limit, get_bool_env, get_str_env
+from src.deep_research.config.report_style import ReportStyle
+from src.deep_research.config.tools import SELECTED_RAG_PROVIDER
+from src.deep_research.graph.builder import build_graph_with_memory
+from src.deep_research.graph.checkpoint import chat_stream_message
+from src.deep_research.llms.llm import get_configured_llm_models
+from src.deep_research.prompt_enhancer.builder import build_graph as build_prompt_enhancer_graph
+from src.deep_research.rag.builder import build_retriever
+from src.deep_research.rag.retriever import Resource
+from src.deep_research.utils.json_utils import sanitize_args
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +117,7 @@ graph = build_graph_with_memory()
     - `max_plan_iterations`: Maximum research plan iterations (default: 1)
     - `max_step_num`: Maximum steps per plan (default: 3)
     - `auto_accepted_plan`: Whether to auto-execute plans (default: false)
-    - `report_style`: Output format style (ACADEMIC, POPULAR_SCIENCE, NEWS, SOCIAL_MEDIA)
+    - `report_style`: Output format style (ACADEMIC, POPULAR_SCIENCE)
     
     ### Response Format:
     Server-Sent Events stream with the following event types:
@@ -476,7 +476,7 @@ def _make_event(event_type: str, data: dict[str, any]):
     ### Request Parameters:
     - `prompt`: The original prompt to enhance (required)
     - `context`: Additional context or background information (optional)
-    - `report_style`: Target output style - academic, popular_science, news, or social_media
+    - `report_style`: Target output style - academic or popular_science
     
     ### Response:
     Returns an enhanced version of the input prompt optimized for the specified context and style.
@@ -510,8 +510,6 @@ async def enhance_prompt(request: EnhancePromptRequest):
                 style_mapping = {
                     "ACADEMIC": ReportStyle.ACADEMIC,
                     "POPULAR_SCIENCE": ReportStyle.POPULAR_SCIENCE,
-                    "NEWS": ReportStyle.NEWS,
-                    "SOCIAL_MEDIA": ReportStyle.SOCIAL_MEDIA,
                 }
                 report_style = style_mapping.get(
                     request.report_style.upper(), ReportStyle.ACADEMIC
@@ -809,7 +807,7 @@ async def rag_resources(request: Annotated[RAGResourceRequest, Query()]):
                         "models": [
                             {
                                 "name": "doubao-seed-1-6-flash-250715",
-                                "provider": "bytedance",
+                                "provider": "charlesxu90",
                                 "capabilities": ["chat", "reasoning"],
                                 "max_tokens": 20000
                             }
@@ -990,9 +988,9 @@ System settings, health checks, and configuration management.
 
 ## 🔗 External Resources
 
-- [Documentation](https://github.com/charlesxu90/AgentDemo)
-- [GitHub Repository](https://github.com/charlesxu90/AgentDemo)
-- [Issues & Support](https://github.com/charlesxu90/AgentDemo/issues)
+- [Documentation](https://github.com/charlesxu90/DeepResearcch)
+- [GitHub Repository](https://github.com/charlesxu90/DeepResearcch)
+- [Issues & Support](https://github.com/charlesxu90/DeepResearcch/issues)
 
 ## 📞 Contact & Support
 
@@ -1004,12 +1002,12 @@ For questions, issues, or feature requests, please visit our GitHub repository.
     # Add additional metadata
     openapi_schema["info"]["contact"] = {
         "name": "DeepResearch Team",
-        "url": "https://github.com/charlesxu90/AgentDemo",
+        "url": "https://github.com/charlesxu90/DeepResearcch",
     }
     
     openapi_schema["info"]["license"] = {
         "name": "MIT License",
-        "url": "https://github.com/charlesxu90/AgentDemo/blob/main/LICENSE",
+        "url": "https://github.com/charlesxu90/DeepResearcch/blob/main/LICENSE",
     }
     
     # Add server information

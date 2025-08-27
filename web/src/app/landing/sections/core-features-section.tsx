@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import {
@@ -27,12 +27,12 @@ type FeatureIcon = {
 const featureIcons: Array<FeatureIcon> = [
   {
     Icon: Microscope,
-    href: "https://github.com/bytedance/deer-flow/blob/main/src/tools",
+    href: "https://github.com/charlesxu90/deep-research/blob/main/src/tools",
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2",
   },
   {
     Icon: User,
-    href: "https://github.com/bytedance/deer-flow/blob/main/src/graph/nodes.py",
+    href: "https://github.com/charlesxu90/deep-research/blob/main/src/graph/nodes.py",
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3",
   },
   {
@@ -42,7 +42,7 @@ const featureIcons: Array<FeatureIcon> = [
   },
   {
     Icon: Usb,
-    href: "https://github.com/bytedance/deer-flow/blob/main/src/graph/nodes.py",
+    href: "https://github.com/charlesxu90/deep-research/blob/main/src/graph/nodes.py",
     className: "lg:col-start-2 lg:col-end-3 lg:row-start-2 lg:row-end-3",
   },
 ];

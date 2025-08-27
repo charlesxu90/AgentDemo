@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
+// Copyright (c) 2025 charlesxu90
 // SPDX-License-Identifier: MIT
 
 import { PythonOutlined } from "@ant-design/icons";
@@ -12,12 +12,12 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { FavIcon } from "~/components/deer-flow/fav-icon";
-import Image from "~/components/deer-flow/image";
-import { LoadingAnimation } from "~/components/deer-flow/loading-animation";
-import { Markdown } from "~/components/deer-flow/markdown";
-import { RainbowText } from "~/components/deer-flow/rainbow-text";
-import { Tooltip } from "~/components/deer-flow/tooltip";
+import { FavIcon } from "~/components/deep-research/fav-icon";
+import Image from "~/components/deep-research/image";
+import { LoadingAnimation } from "~/components/deep-research/loading-animation";
+import { Markdown } from "~/components/deep-research/markdown";
+import { RainbowText } from "~/components/deep-research/rainbow-text";
+import { Tooltip } from "~/components/deep-research/tooltip";
 import {
   Accordion,
   AccordionContent,

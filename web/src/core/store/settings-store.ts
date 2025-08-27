@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 import type { MCPServerMetadata, SimpleMCPServerMetadata } from "../mcp";
 
-const SETTINGS_KEY = "deerflow.settings";
+const SETTINGS_KEY = "DeepResearcch.settings";
 
 const DEFAULT_SETTINGS: SettingsState = {
   general: {
@@ -29,7 +29,7 @@ export type SettingsState = {
     maxPlanIterations: number;
     maxStepNum: number;
     maxSearchResults: number;
-    reportStyle: "academic" | "popular_science" | "news" | "social_media";
+    reportStyle: "academic" | "popular_science";
   };
   mcp: {
     servers: MCPServerMetadata[];
@@ -129,7 +129,7 @@ export const getChatStreamSettings = () => {
 };
 
 export function setReportStyle(
-  value: "academic" | "popular_science" | "news" | "social_media",
+  value: "academic" | "popular_science",
 ) {
   useSettingsStore.setState((state) => ({
     general: {

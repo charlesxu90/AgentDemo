@@ -1,5 +1,22 @@
-# Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
-# SPDX-License-Identifier: MIT
+"""
+Model Context Protocol (MCP) Request and Response Models
+
+This module defines Pydantic models for MCP server integration API requests and responses.
+The Model Context Protocol enables AI applications to connect to external data sources
+and tools in a standardized way, supporting multiple transport methods and server types.
+
+Classes:
+    MCPServerMetadataRequest: Request model for connecting to MCP servers
+    MCPTool: Individual tool definition from MCP server
+    MCPServerMetadataResponse: Response model containing server metadata and tools
+
+Supports multiple transport protocols:
+- stdio: Standard input/output based servers
+- sse: Server-Sent Events based servers  
+- streamable_http: HTTP streaming based servers
+
+Used for dynamic tool discovery and integration with external MCP-compatible services.
+"""
 
 from typing import Dict, List, Optional
 

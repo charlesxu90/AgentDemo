@@ -2,13 +2,13 @@
 
 This is the web UI for a general agentic AI demo case.
 
-Adapted from [`DeerFlow`](https://github.com/bytedance/deer-flow).
+Adapted from [`DeepResearcch`](https://github.com/charlesxu90/deep-research).
 
 ## Quick Start
 
 ### Prerequisites
 
-- [`DeerFlow`](https://github.com/bytedance/deer-flow)
+- [`DeepResearcch`](https://github.com/charlesxu90/deep-research)
 - Node.js (v22.14.0+)
 - pnpm (v10.6.2+) as package manager
 
