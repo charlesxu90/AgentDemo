@@ -1,3 +1,74 @@
+"""
+RAGFlow Service Integration for Document Retrieval
+
+This module provides integration with RAGFlow, a document processing and retrieval service,
+implementing the Retriever interface for seamless RAG capabilities within the Deep Research
+workflow. It handles authentication, API communication, and data transformation.
+
+Key Classes:
+    RAGFlowProvider: Concrete implementation of Retriever interface for RAGFlow
+        - Inherits from Retriever abstract base class
+        - Manages RAGFlow API authentication and communication
+        - Handles document retrieval and resource listing operations
+        
+Key Functions:
+    query_relevant_documents(query, resources): Main document search functionality
+        - Accepts natural language query and optional resource filters
+        - Constructs API payload with dataset/document filtering
+        - Processes API response to extract documents and chunks
+        - Returns ranked Document objects with similarity-scored chunks
+        
+    list_resources(query): Resource discovery and listing
+        - Optional query parameter for filtering available datasets
+        - Returns list of Resource objects representing available knowledge bases
+        - Supports resource filtering by name or metadata
+        
+    parse_uri(uri): URI parsing utility for RAGFlow resource identifiers
+        - Parses custom "rag://" scheme URIs
+        - Extracts dataset and document identifiers
+        - Validates URI format and structure
+
+RAGFlow API Integration:
+    - REST API communication with Bearer token authentication
+    - Environment-based configuration (RAGFLOW_API_URL, RAGFLOW_API_KEY)
+    - Configurable page size for result pagination
+    - Optional cross-language search capabilities
+
+Authentication:
+    - Bearer token authentication using API key
+    - API key sourced from RAGFLOW_API_KEY environment variable
+    - Secure HTTP headers for all API communications
+
+Configuration Parameters:
+    - api_url: RAGFlow service endpoint URL
+    - api_key: Authentication token for API access
+    - page_size: Maximum results per query (default: 10)
+    - cross_languages: Optional language list for cross-lingual search
+
+Search Features:
+    - Natural language query processing
+    - Dataset and document-level filtering
+    - Similarity-based result ranking
+    - Cross-language search support (if configured)
+    - Pagination support for large result sets
+
+Data Transformation:
+    - API response parsing and validation
+    - Document aggregation by document ID
+    - Chunk extraction with similarity scores
+    - Resource metadata extraction and formatting
+
+Error Handling:
+    - Comprehensive HTTP error handling with descriptive messages
+    - Configuration validation during initialization
+    - Graceful handling of malformed API responses
+    - Detailed error reporting for debugging
+
+The provider enables seamless integration with RAGFlow services while maintaining
+compatibility with the standard Retriever interface used throughout the Deep
+Research system.
+"""
+
 # 
 
 import os

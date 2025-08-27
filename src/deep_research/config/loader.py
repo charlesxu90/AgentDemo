@@ -1,3 +1,40 @@
+"""
+YAML Configuration Loader with Environment Variable Substitution
+
+This module provides utilities for loading and processing YAML configuration files
+with automatic environment variable substitution and caching capabilities.
+
+Key Functions:
+    replace_env_vars(value): Substitutes environment variables in string values
+        - Supports $VARIABLE_NAME syntax for environment variable references
+        - Falls back to variable name if environment variable not found
+        
+    process_dict(config): Recursively processes dictionaries for environment variable substitution
+        - Traverses nested dictionary structures
+        - Applies environment variable replacement to string values
+        - Preserves non-string values unchanged
+        
+    load_yaml_config(file_path): Loads and processes YAML files with caching
+        - Loads YAML configuration from file system
+        - Applies environment variable substitution
+        - Caches processed configurations for performance
+        - Returns empty dict if file doesn't exist
+
+Features:
+    - Environment Variable Substitution: Automatic $VAR replacement in YAML values
+    - Caching System: File-based caching to avoid repeated YAML parsing
+    - Error Handling: Graceful handling of missing files and invalid YAML
+    - Recursive Processing: Deep traversal of nested configuration structures
+
+Usage:
+    config = load_yaml_config("conf.yaml")
+    # YAML file can contain: api_key: $OPENAI_API_KEY
+    # Result: api_key: "sk-..." (from environment variable)
+
+The module is designed to work seamlessly with the main configuration system,
+providing flexible configuration management with environment-specific overrides.
+"""
+
 # 
 
 import os

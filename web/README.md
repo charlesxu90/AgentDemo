@@ -48,6 +48,43 @@ You can set the `NEXT_PUBLIC_API_URL` environment variable if you're using a dif
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
 ```
 
+## Core Workflow Explanation:
+1. Frontend Layer (React/TypeScript)
+- Entry: User starts at landing page, navigates to chat interface
+- Main Components: Chat interface with dual-pane layout (messages + research display)
+- State Management: Zustand stores manage chat state, settings, and user preferences
+- API Integration: Real-time streaming via Server-Sent Events to backend
+
+2. Backend API Layer (FastAPI)
+- Entry Point: app.py handles HTTP requests with OpenAPI documentation
+- Request Processing: Validates requests, manages authentication, routes to workflow engine
+- Streaming: Real-time response streaming back to frontend
+
+3. Deep Research Engine (LangGraph Workflow)
+- Workflow Orchestration: workflow.py manages the entire research pipeline
+- Graph Execution: LangGraph state machine with nodes for planning, research, coordination, and reporting
+- Agent System: Specialized AI agents (planner, researcher, coordinator, reporter) with specific LLM assignments
+
+4. Core Research Flow:
+- Planning: User query → Research plan creation → Human approval (with interrupts)
+- Background Investigation: Web search and context gathering
+- Research Execution: Multi-step research with tool integrations
+- Coordination: Progress monitoring and plan adjustments
+- Reporting: Final report generation in selected style (Academic/Popular Science)
+
+5. Tool Ecosystem:
+- Web Search: Tavily API integration for real-time information
+- Content Processing: Jina API for article extraction and processing
+- Code Execution: Python REPL for data analysis and computation
+- RAG System: Multiple providers (VikingDB, RAGFlow) for document retrieval
+
+6. Configuration & Extensibility:
+- Modular Configuration: YAML-based settings with environment variable overrides
+- MCP Integration: Model Context Protocol for external tool integration
+- Checkpoint System: MongoDB/PostgreSQL for conversation memory and state persistence
+- This architecture provides a robust, scalable research assistant with real-time streaming, human-in-the-loop workflows, and extensive tool integration capabilities.
+
+
 ## License
 
 This project is open source and available under the [MIT License](../LICENSE).

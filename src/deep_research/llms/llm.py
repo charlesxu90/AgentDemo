@@ -1,4 +1,45 @@
-# 
+"""
+LLM Management and Configuration Module
+
+This module provides centralized management of Large Language Models (LLMs) for the Deep Research system.
+It handles configuration loading, model initialization, caching, and provider-specific implementations.
+
+Key Functions:
+    _get_config_file_path(): Returns the path to the main configuration file (conf.yaml)
+    _get_llm_type_config_keys(): Maps LLM types to their configuration keys
+    _get_env_llm_conf(llm_type): Extracts LLM configuration from environment variables
+    _create_llm_use_conf(llm_type, conf): Creates LLM instances using merged configurations
+    get_llm_by_type(llm_type): Main factory function to get cached LLM instances by type
+    get_configured_llm_models(): Returns all configured models grouped by type
+
+Supported LLM Types:
+    - reasoning: For complex reasoning tasks (e.g., DeepSeek, thinking models)
+    - basic: For general chat and text generation (e.g., GPT-4, Claude)
+    - vision: For image understanding and multimodal tasks
+    - code: For code generation and analysis tasks
+
+Supported Providers:
+    - OpenAI (ChatOpenAI): Standard OpenAI API compatible models
+    - Azure OpenAI (AzureChatOpenAI): Azure-hosted OpenAI models
+    - DeepSeek (ChatDeepSeek): DeepSeek reasoning models with thinking capabilities
+    - Dashscope (ChatDashscope): Alibaba Cloud's Dashscope models
+
+Configuration Sources:
+    1. YAML configuration file (conf.yaml)
+    2. Environment variables (format: {LLM_TYPE}_MODEL__{KEY})
+    Environment variables take precedence over YAML configuration.
+
+Caching:
+    - LLM instances are cached globally to avoid repeated initialization
+    - Cache key is the LLM type (reasoning, basic, vision, code)
+    - Improves performance and reduces API connection overhead
+
+Error Handling:
+    - Graceful fallback for missing configurations
+    - SSL verification can be disabled for development
+    - Rate limiting with configurable retry attempts
+    - Comprehensive error messages for debugging
+"""
 
 import os
 from pathlib import Path

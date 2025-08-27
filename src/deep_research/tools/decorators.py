@@ -1,5 +1,88 @@
-# Copyright (c) 2025 charlesxu90
-# SPDX-License-Identifier: MIT
+"""
+Tool Enhancement Decorators and Logging Utilities
+
+This module provides decorators and mixins for enhancing tools with logging,
+monitoring, and debugging capabilities. It enables consistent instrumentation
+across all tools in the Deep Research system.
+
+Key Functions:
+    log_io(func): Function decorator for input/output logging
+        - Logs function calls with parameters and return values
+        - Preserves function metadata using functools.wraps
+        - Provides comprehensive debugging information
+        - Non-intrusive logging that doesn't affect function behavior
+        
+    create_logged_tool(base_tool_class): Factory for creating logged tool classes
+        - Creates new classes that inherit from LoggedToolMixin and base tool
+        - Adds logging capabilities to any existing tool class
+        - Maintains original class functionality while adding instrumentation
+        - Returns enhanced tool class with descriptive naming
+
+Key Classes:
+    LoggedToolMixin: Mixin class for adding logging to tool classes
+        - Provides _log_operation() helper for consistent operation logging
+        - Overrides _run() method to add automatic logging
+        - Integrates with LangChain tool patterns
+        - Maintains backward compatibility with existing tools
+
+Logging Features:
+    Input Parameter Logging:
+        - Captures all positional and keyword arguments
+        - Formats parameters in readable string format
+        - Includes function name for context
+        - Uses INFO level for visibility
+        
+    Output Result Logging:
+        - Logs function return values
+        - Truncates large outputs for readability
+        - Provides execution context
+        - Uses DEBUG level for detailed information
+        
+    Operation Tracking:
+        - Method-level operation logging
+        - Tool class identification with name cleaning
+        - Parameter capture for all operations
+        - Consistent logging format across tools
+
+Decorator Implementation:
+    - Preserves Function Metadata: Uses functools.wraps for proper decoration
+    - Type Safety: Maintains original function signatures and types
+    - Exception Handling: Logging doesn't interfere with exception propagation
+    - Performance: Minimal overhead for production use
+
+Mixin Pattern:
+    - Multiple Inheritance: Combines with any base tool class
+    - Method Override: Safely overrides _run method with super() calls
+    - Flexible Integration: Works with various tool architectures
+    - Name Management: Automatic class naming for logged variants
+
+Factory Function:
+    - Dynamic Class Creation: Creates new classes at runtime
+    - Type Preservation: Maintains original class types and interfaces
+    - Naming Convention: Consistent "Logged" prefix naming
+    - Inheritance Chain: Proper inheritance hierarchy maintenance
+
+Tool Enhancement Pipeline:
+    1. Original Tool Class: Base functionality implementation
+    2. Mixin Application: LoggedToolMixin adds logging capabilities
+    3. Factory Creation: create_logged_tool() generates enhanced class
+    4. Integration: Enhanced tools work seamlessly with LangChain
+
+Usage Patterns:
+    - Direct Decoration: @log_io for simple function logging
+    - Class Enhancement: create_logged_tool() for complex tool classes
+    - Monitoring: Comprehensive operation visibility
+    - Debugging: Detailed execution tracing
+
+Logging Output Examples:
+    - Tool TavilySearch called with parameters: query=AI trends, max_results=5
+    - Tool TavilySearch returned: [{'title': '...', 'content': '...'}]
+    - Tool RAGRetriever._run called with parameters: keywords=machine learning
+
+The module provides a standardized approach to tool instrumentation,
+enabling comprehensive monitoring and debugging across the entire
+Deep Research tool ecosystem.
+"""
 
 import functools
 import logging

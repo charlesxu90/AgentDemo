@@ -1,5 +1,40 @@
 """
-Built-in questions
+Built-in Question Templates for Deep Research
+
+This module provides predefined research questions in multiple languages to help users
+get started with the Deep Research system. These questions cover various domains and
+serve as examples of well-formed research queries.
+
+Constants:
+    BUILT_IN_QUESTIONS: List of English research questions covering various domains
+        - Technology: AI, quantum computing, blockchain, cybersecurity
+        - Healthcare: AI adoption, medical applications
+        - Environment: Climate change, renewable energy, electric vehicles
+        - Finance: Machine learning applications in financial services
+        - Science: Natural language processing advances
+        
+    BUILT_IN_QUESTIONS_ZH_CN: Chinese translations of the research questions
+        - Provides localized question templates for Chinese-speaking users
+        - Maintains semantic equivalence with English versions
+        - Covers the same research domains and topics
+
+Question Categories:
+    1. Artificial Intelligence and Machine Learning
+    2. Emerging Technologies (Quantum, Blockchain)
+    3. Environmental and Sustainability Topics
+    4. Healthcare and Medical Applications
+    5. Cybersecurity and Technology Ethics
+    6. Industry-Specific Applications
+
+Usage:
+    These questions serve multiple purposes:
+    - User interface examples and suggestions
+    - Testing and demonstration scenarios
+    - Template patterns for query formulation
+    - Onboarding and tutorial content
+
+The questions are designed to showcase the system's capabilities across different
+research domains while providing users with concrete examples of effective queries.
 """
 
 # English built-in questions

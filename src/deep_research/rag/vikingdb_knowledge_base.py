@@ -1,3 +1,83 @@
+"""
+VikingDB Knowledge Base Integration with AWS Signature V4 Authentication
+
+This module provides integration with VikingDB Knowledge Base service, ByteDance's
+enterprise-grade knowledge management platform. It implements secure API access using
+AWS Signature Version 4 authentication and provides high-performance document retrieval.
+
+Key Classes:
+    VikingDBKnowledgeBaseProvider: Enterprise knowledge base integration
+        - Implements Retriever interface for VikingDB API access
+        - Handles AWS Signature V4 authentication for secure communication
+        - Provides high-performance vector search and document retrieval
+        - Supports enterprise security and compliance requirements
+
+Key Functions:
+    query_relevant_documents(query, resources): Vector-based document search
+        - Natural language query processing with semantic search
+        - Resource filtering by knowledge base and document IDs
+        - Returns ranked documents with similarity-scored content chunks
+        - Configurable retrieval size for result optimization
+        
+    list_resources(query): Knowledge base discovery and management
+        - Lists available knowledge bases with optional filtering
+        - Returns Resource objects with metadata and descriptions
+        - Supports hierarchical knowledge base organization
+        
+    Authentication Methods:
+        - _hmac_sha256(): HMAC-SHA256 signing for request authentication
+        - _hash_sha256(): SHA256 hashing for content verification
+        - _get_signed_key(): Generates signing keys for AWS Signature V4
+        - _create_canonical_request(): Builds canonical request for signing
+        - _sign_request(): Complete request signing with AWS Signature V4
+
+Authentication Features:
+    - AWS Signature Version 4 implementation for enterprise security
+    - Access Key (AK) and Secret Key (SK) based authentication
+    - Request signing with timestamp and content verification
+    - Regional endpoint support for compliance and performance
+    - Secure header management and payload verification
+
+Configuration Parameters:
+    - api_url: VikingDB service endpoint URL
+    - api_ak: Access Key for authentication
+    - api_sk: Secret Key for request signing
+    - retrieval_size: Maximum documents per query (default: 10)
+    - region: Service region for authentication (default: cn-north-1)
+    - service: Service identifier for signature (default: air)
+
+Enterprise Features:
+    - High-performance vector search with semantic understanding
+    - Scalable knowledge base management for large document collections
+    - Advanced security with encryption and access controls
+    - Compliance support for enterprise data governance
+    - Multi-region deployment capabilities
+
+Search Capabilities:
+    - Semantic vector search for conceptual document matching
+    - Configurable result size for performance optimization
+    - Knowledge base and document-level filtering
+    - Relevance scoring and ranking for result quality
+    - Support for large-scale document collections
+
+Security Implementation:
+    - End-to-end request signing with AWS Signature V4
+    - Secure credential management through environment variables
+    - Timestamp-based request validation for replay attack prevention
+    - Content integrity verification through payload hashing
+    - Regional security compliance support
+
+Error Handling:
+    - Comprehensive authentication error handling
+    - HTTP status code validation and error reporting
+    - Configuration validation during initialization
+    - Detailed error messages for troubleshooting
+
+The provider offers enterprise-grade document retrieval capabilities with robust
+security features, making it suitable for production deployments requiring high
+performance and compliance standards.
+"""
+
 import hashlib
 import hmac
 import json

@@ -1,5 +1,81 @@
-# Copyright (c) 2025 charlesxu90
-# SPDX-License-Identifier: MIT
+"""
+RAG Document Retrieval Tool for Deep Research System
+
+This module provides document retrieval capabilities using Retrieval-Augmented Generation
+(RAG) systems. It enables agents to search and retrieve relevant documents from configured
+knowledge bases and document collections.
+
+Key Classes:
+    RetrieverInput: Pydantic model for tool input validation
+        - keywords: str - Search keywords for document retrieval
+        - Provides type safety and validation for search parameters
+        
+    RetrieverTool: LangChain-compatible tool for document retrieval
+        - Inherits from BaseTool for standard tool interface
+        - Integrates with RAG providers for document search
+        - Supports both synchronous and asynchronous operations
+        - Returns structured document results with metadata
+
+Key Functions:
+    get_retriever_tool(resources): Factory function for creating retriever tools
+        - Creates RetrieverTool instance with specified resources
+        - Validates resource availability and configuration
+        - Returns None if no resources or RAG provider available
+        - Integrates with build_retriever() for provider selection
+
+Tool Functionality:
+    Document Search:
+        - Keyword-based search across configured knowledge bases
+        - Relevance ranking and similarity scoring
+        - Resource filtering for targeted searches
+        - Structured result formatting for downstream processing
+        
+    Async Support:
+        - Both sync (_run) and async (_arun) implementations
+        - Non-blocking operations for concurrent processing
+        - Callback manager integration for monitoring
+        
+    Result Processing:
+        - Document conversion to dictionary format
+        - Metadata preservation (titles, URLs, descriptions)
+        - Content chunking with similarity scores
+        - Fallback handling for empty results
+
+RAG Integration:
+    - Provider Abstraction: Works with any configured RAG provider
+    - Resource Management: Handles resource filtering and selection
+    - Configuration Integration: Uses SELECTED_RAG_PROVIDER setting
+    - Error Handling: Graceful handling of provider failures
+
+Search Features:
+    - Semantic Search: Vector-based similarity matching
+    - Keyword Search: Traditional text-based search
+    - Hybrid Retrieval: Combining multiple search strategies
+    - Result Ranking: Relevance-based result ordering
+    - Content Filtering: Resource-based content filtering
+
+Tool Configuration:
+    - Resource-Based: Tool creation based on available resources
+    - Provider-Agnostic: Works with multiple RAG backends
+    - Flexible Initialization: Optional tool creation for unconfigured systems
+    - Logging Integration: Comprehensive operation logging
+
+Usage Patterns:
+    - Knowledge Base Search: Search internal documentation and knowledge
+    - Research Context: Retrieve relevant background information
+    - Reference Lookup: Find supporting documents and citations
+    - Fact Verification: Cross-reference information across sources
+
+Error Handling:
+    - Empty Results: Graceful handling of no-match scenarios
+    - Provider Failures: Fallback behavior for RAG system issues
+    - Resource Validation: Checking resource availability
+    - Input Validation: Parameter validation through Pydantic models
+
+The tool enables agents to access and retrieve information from configured
+knowledge bases, supporting research workflows with relevant context and
+background information from curated document collections.
+"""
 
 import logging
 from typing import List, Optional, Type

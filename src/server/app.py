@@ -1,3 +1,219 @@
+"""
+FastAPI Server Application for Deep Research AI Platform
+
+This module implements the complete FastAPI server for the Deep Research AI-powered
+research and analysis platform. It provides RESTful APIs, streaming endpoints,
+and comprehensive system management capabilities.
+
+Key Functions:
+    chat_stream(request): Main streaming chat endpoint for AI research conversations
+        - Real-time Server-Sent Events streaming
+        - Multi-step research workflow execution
+        - Tool integration (web search, document analysis, etc.)
+        - MCP (Model Context Protocol) support
+        - RAG (Retrieval-Augmented Generation) integration
+        - Conversation persistence with checkpoints
+        
+    enhance_prompt(request): AI-powered prompt enhancement service
+        - Automatic prompt optimization and clarity improvement
+        - Context integration and style adaptation
+        - Best practices application for better results
+        
+    mcp_server_metadata(request): MCP server discovery and tool loading
+        - Connect to external MCP servers via multiple transports
+        - Dynamic tool discovery and metadata retrieval
+        - Support for stdio, SSE, and HTTP protocols
+        
+    rag_config(): RAG system configuration endpoint
+        - Current provider information and status
+        - System capabilities and integration details
+        
+    rag_resources(request): RAG resource discovery and search
+        - Knowledge base resource listing
+        - Semantic search across available resources
+        - Resource metadata and access information
+        
+    config(): Complete system configuration endpoint
+        - Model configuration and availability
+        - Feature flags and capability discovery
+        - RAG and integration status reporting
+
+Helper Functions:
+    _astream_workflow_generator(): Core streaming workflow generator
+        - Manages research workflow execution
+        - Handles database checkpoints (PostgreSQL/MongoDB)
+        - Processes message streaming and tool calls
+        - Manages interrupts and user feedback
+        
+    _stream_graph_events(): Event streaming from LangGraph workflow
+        - Real-time event processing and formatting
+        - Tool call execution monitoring
+        - Agent coordination and message routing
+        
+    _process_message_chunk(): Individual message chunk processing
+        - Message type detection and routing
+        - Tool call formatting and sanitization
+        - Event stream message creation
+        
+    _make_event(): Server-Sent Events formatting
+        - JSON serialization with proper encoding
+        - Error handling and fallback mechanisms
+        - Chat stream persistence integration
+
+Server Features:
+    Streaming Capabilities:
+        - Server-Sent Events for real-time responses
+        - Token-by-token message streaming
+        - Tool execution progress monitoring
+        - Research workflow status updates
+        
+    Research Workflows:
+        - Multi-step research plan generation and execution
+        - Background investigation capabilities
+        - Interrupt-driven user feedback integration
+        - Report generation in multiple styles
+        
+    Tool Integration:
+        - Web search (Tavily, DuckDuckGo, Brave, etc.)
+        - Document crawling and analysis
+        - Python code execution environment
+        - RAG document retrieval
+        - MCP external tool loading
+        
+    System Management:
+        - Health monitoring and status checks
+        - Configuration discovery and reporting
+        - Model availability and capability listing
+        - Error handling with appropriate HTTP status codes
+
+Middleware and Security:
+    - CORS middleware with configurable origins
+    - Request validation and sanitization
+    - Environment-based configuration
+    - Optional authentication support
+    - Rate limiting ready infrastructure
+
+Database Integration:
+    - PostgreSQL checkpoint support for conversation persistence
+    - MongoDB checkpoint support as alternative
+    - In-memory storage for temporary data
+    - Automatic failover and error handling
+
+API Documentation:
+    - Enhanced OpenAPI schema with detailed descriptions
+    - Interactive Swagger UI with live testing
+    - Alternative ReDoc documentation interface
+    - Comprehensive endpoint categorization and tagging
+
+Error Handling:
+    - Structured error responses with appropriate HTTP codes
+    - Detailed logging for debugging and monitoring
+    - Graceful fallbacks for service failures
+    - Client-friendly error messages
+
+=== API ENDPOINTS REFERENCE ===
+
+Chat & Research APIs:
+    POST /api/chat/stream
+        Function: chat_stream(request: ChatRequest)
+        Purpose: Stream AI-powered research conversations with real-time responses
+        Features: SSE streaming, multi-step workflows, tool integration, RAG support
+        Request: ChatRequest with messages, resources, research parameters
+        Response: Server-Sent Events stream with message chunks and tool results
+        Authentication: None required
+        Rate Limiting: Based on system configuration
+
+Prompt Engineering APIs:
+    POST /api/prompt/enhance
+        Function: enhance_prompt(request: EnhancePromptRequest)
+        Purpose: AI-powered prompt enhancement and optimization service
+        Features: Automatic optimization, context integration, style adaptation
+        Request: EnhancePromptRequest with prompt, context, report_style
+        Response: JSON with enhanced prompt result
+        Authentication: None required
+        Processing Time: 5-30 seconds depending on prompt complexity
+
+MCP Integration APIs:
+    POST /api/mcp/server/metadata
+        Function: mcp_server_metadata(request: MCPServerMetadataRequest)
+        Purpose: Retrieve metadata and tools from Model Context Protocol servers
+        Features: Dynamic tool discovery, multiple transport protocols
+        Request: MCPServerMetadataRequest with transport, command, URL details
+        Response: MCPServerMetadataResponse with server metadata and available tools
+        Authentication: None required (but MCP must be enabled via ENABLE_MCP_SERVER_CONFIGURATION=true)
+        Timeout: Configurable, default 300 seconds
+
+RAG System APIs:
+    GET /api/rag/config
+        Function: rag_config()
+        Purpose: Retrieve current RAG system configuration and provider information
+        Features: Provider status, capabilities, integration details
+        Request: No parameters required
+        Response: RAGConfigResponse with provider information
+        Authentication: None required
+        Cache: Configuration is cached until server restart
+
+    GET /api/rag/resources
+        Function: rag_resources(request: RAGResourceRequest)
+        Purpose: Search and retrieve available resources from RAG system
+        Features: Resource discovery, semantic search, metadata retrieval
+        Request: Query parameter for resource search (optional)
+        Response: RAGResourcesResponse with list of available resources
+        Authentication: None required
+        Dependency: Requires configured RAG provider
+
+System Configuration APIs:
+    GET /api/config
+        Function: config()
+        Purpose: Retrieve comprehensive system configuration and status
+        Features: Model configuration, RAG settings, feature flags
+        Request: No parameters required
+        Response: ConfigResponse with complete system status
+        Authentication: None required
+        Cache: Real-time configuration data
+
+System Information APIs:
+    GET /
+        Function: root()
+        Purpose: API information and navigation links
+        Features: Welcome message, endpoint discovery, documentation links
+        Request: No parameters required
+        Response: JSON with API information and available endpoints
+        Authentication: None required
+        Purpose: Entry point for API discovery
+
+    GET /health
+        Function: health()
+        Purpose: System health check and operational status
+        Features: Health indicators, uptime verification, monitoring support
+        Request: No parameters required
+        Response: JSON with health status and timestamp
+        Authentication: None required
+        SLA: < 100ms response time
+
+=== HELPER FUNCTIONS REFERENCE ===
+
+Streaming and Event Processing:
+    _astream_workflow_generator(): Core streaming workflow generator and orchestrator
+    _stream_graph_events(): Event streaming from LangGraph workflow execution
+    _process_message_chunk(): Individual message chunk processing and formatting
+    _make_event(): Server-Sent Events formatting with JSON serialization
+    _process_tool_call_chunks(): Tool call chunk processing and sanitization
+
+Message and Event Handling:
+    _create_event_stream_message(): Base event stream message creation
+    _create_interrupt_event(): Interrupt event creation for user feedback
+    _process_initial_messages(): Initial message processing and formatting
+    _get_agent_name(): Agent name extraction from workflow metadata
+
+System and Configuration:
+    custom_openapi(): Enhanced OpenAPI schema generation with custom documentation
+
+The server provides a complete API surface for AI-powered research workflows,
+supporting both simple chat interactions and complex multi-step research processes
+with external tool integration and knowledge base access.
+"""
+
 import base64
 import json
 import logging

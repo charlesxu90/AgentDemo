@@ -1,4 +1,42 @@
 
+"""
+Configuration Management for Deep Research System
+
+This module provides centralized configuration management for the Deep Research workflow system.
+It handles environment variable parsing, configuration validation, and provides a unified 
+Configuration dataclass for workflow parameters.
+
+Key Functions:
+    get_bool_env(name, default): Parses boolean environment variables with truthy value detection
+    get_str_env(name, default): Retrieves string environment variables with fallback defaults
+    get_int_env(name, default): Parses integer environment variables with error handling
+    get_recursion_limit(default): Gets workflow recursion limit with validation
+
+Key Classes:
+    Configuration: Dataclass holding all configurable workflow parameters
+        - resources: List of external resources for research context
+        - max_plan_iterations: Maximum number of research plan refinements
+        - max_step_num: Maximum steps per research plan
+        - max_search_results: Limit for search result count
+        - mcp_settings: Model Context Protocol tool configurations
+        - report_style: Output format style (academic/popular_science)
+        - enable_deep_thinking: Flag for reasoning model deep thinking mode
+
+Configuration Sources:
+    1. Environment variables (highest precedence)
+    2. RunnableConfig from LangGraph workflow
+    3. Default values (lowest precedence)
+
+Environment Variable Parsing:
+    - Boolean: Supports "1", "true", "yes", "y", "on" as truthy values (case-insensitive)
+    - Integer: Validates numeric values with error logging for invalid inputs
+    - String: Direct string extraction with whitespace trimming
+    - Recursion Limit: Special handling for workflow execution limits
+
+The Configuration class integrates with LangGraph's RunnableConfig system to provide
+seamless parameter passing throughout the research workflow execution.
+"""
+
 import logging
 import os
 from dataclasses import dataclass, field, fields

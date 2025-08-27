@@ -1,5 +1,3 @@
-# Copyright (c) 2025 charlesxu90
-# SPDX-License-Identifier: MIT
 
 import logging
 

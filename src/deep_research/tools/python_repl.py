@@ -1,5 +1,66 @@
-# Copyright (c) 2025 charlesxu90
-# SPDX-License-Identifier: MIT
+"""
+Python Code Execution Tool for Deep Research System
+
+This module provides safe Python code execution capabilities within the Deep Research
+workflow. It offers a sandboxed Python REPL environment for data analysis, mathematical
+calculations, and computational tasks during research processes.
+
+Key Functions:
+    _is_python_repl_enabled(): Configuration checker for tool availability
+        - Checks ENABLE_PYTHON_REPL environment variable
+        - Supports multiple truthy formats ("true", "1", "yes", "on")
+        - Returns boolean indicating if tool should be active
+        - Used for security-conscious deployments
+        
+    python_repl_tool(code): Main code execution function
+        - Executes Python code in isolated REPL environment
+        - Returns formatted results with code and output
+        - Handles errors gracefully with detailed error reporting
+        - Supports print statements for visible output
+
+Security Features:
+    - Environment-Based Control: Tool can be disabled via configuration
+    - Sandboxed Execution: Uses LangChain's PythonREPL for isolation
+    - Input Validation: Validates code parameter types
+    - Error Containment: Catches and reports exceptions safely
+    - Controlled Access: Optional tool activation for security
+
+Execution Capabilities:
+    - Mathematical Calculations: Complex mathematical operations and statistics
+    - Data Analysis: Pandas, NumPy, and other data science libraries
+    - Visualization: Basic plotting and chart generation (if libraries available)
+    - Algorithm Implementation: Custom algorithms and data processing
+    - File Operations: Limited file system access within sandbox
+
+Output Formatting:
+    - Structured Results: Formatted output with code block and results
+    - Error Reporting: Clear error messages with code context
+    - Status Indication: Success/failure status in response
+    - User Visibility: Print statements appear in output for user feedback
+
+Error Handling:
+    - Configuration Errors: Graceful handling when tool is disabled
+    - Type Validation: Input type checking with informative errors
+    - Execution Errors: Python exception catching and reporting
+    - Logging Integration: Comprehensive logging for monitoring and debugging
+
+Tool Integration:
+    - LangChain Compatibility: Decorated as LangChain tool for agent use
+    - Logging Enhancement: Enhanced with @log_io decorator
+    - Type Safety: Full type annotations for validation
+    - Agent Integration: Seamless integration with research agents
+
+Use Cases:
+    - Data Processing: Clean and analyze research data
+    - Statistical Analysis: Calculate statistics and trends
+    - Mathematical Modeling: Implement research algorithms
+    - Visualization: Create charts and graphs for insights
+    - Validation: Verify calculations and hypotheses
+
+The tool provides researchers and agents with computational capabilities,
+enabling sophisticated data analysis and mathematical operations within
+the research workflow while maintaining security and isolation.
+"""
 
 import logging
 import os

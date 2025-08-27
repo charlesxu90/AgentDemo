@@ -1,5 +1,78 @@
-# Copyright (c) 2025 charlesxu90
-# SPDX-License-Identifier: MIT
+"""
+Multi-Engine Web Search Tool for Deep Research System
+
+This module provides a unified interface for multiple web search engines, enabling
+flexible search capabilities across different information sources. It supports
+various search providers with configurable parameters and logging integration.
+
+Key Functions:
+    get_search_config(): Configuration loader for search engine settings
+        - Loads search configuration from conf.yaml
+        - Returns search engine specific settings
+        - Supports domain filtering and language preferences
+        
+    get_web_search_tool(max_search_results): Search tool factory function
+        - Creates configured search tool based on SELECTED_SEARCH_ENGINE
+        - Applies result limits and provider-specific configurations
+        - Returns LangChain-compatible search tool with logging
+
+Supported Search Engines:
+    1. Tavily Search (SearchEngine.TAVILY):
+        - Advanced web search with content analysis
+        - Support for include/exclude domain filtering
+        - Image search and description capabilities
+        - Raw content extraction for detailed analysis
+        
+    2. DuckDuckGo (SearchEngine.DUCKDUCKGO):
+        - Privacy-focused search engine
+        - No tracking or personalization
+        - Good for general web search
+        
+    3. Brave Search (SearchEngine.BRAVE_SEARCH):
+        - Independent search index
+        - Privacy-focused alternative
+        - Requires API key configuration
+        
+    4. ArXiv (SearchEngine.ARXIV):
+        - Academic paper search
+        - Scholarly publications and preprints
+        - Metadata and full-text search
+        
+    5. Wikipedia (SearchEngine.WIKIPEDIA):
+        - Encyclopedia search
+        - Multilingual support
+        - Structured knowledge base
+
+Configuration Features:
+    - Domain Filtering: Include/exclude specific domains (Tavily)
+    - Language Support: Configurable language for Wikipedia
+    - Content Limits: Character limits for content extraction
+    - Result Limits: Configurable maximum results per query
+    - API Keys: Secure API key management through environment variables
+
+Logging Integration:
+    - Enhanced Logging: All search tools wrapped with logging decorators
+    - Operation Tracking: Input/output logging for monitoring
+    - Performance Monitoring: Search timing and result metrics
+    - Error Tracking: Search failures and API errors
+
+Tool Creation:
+    - Factory Pattern: Centralized tool creation based on configuration
+    - LangChain Compatibility: All tools compatible with LangChain agents
+    - Consistent Interface: Uniform interface across different providers
+    - Error Handling: Graceful handling of unsupported engines
+
+Search Capabilities:
+    - Web Content: General web search across various sources
+    - Academic Content: Scholarly articles and research papers
+    - Reference Material: Encyclopedia and reference sources
+    - Image Search: Visual content discovery (Tavily)
+    - Domain-Specific: Filtered searches within specific domains
+
+The module enables agents to access diverse information sources through
+a unified interface, supporting comprehensive research across different
+types of content and sources while maintaining consistent behavior.
+"""
 
 import logging
 import os

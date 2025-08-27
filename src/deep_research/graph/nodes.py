@@ -32,10 +32,10 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.types import Command, interrupt
 import openai
 
-from src.deep_research.agents import create_agent
-from src.deep_research.config.agents import AGENT_LLM_MAP
 from src.deep_research.config.configuration import Configuration
+from src.deep_research.config.agents import AGENT_LLM_MAP
 from src.deep_research.llms.llm import get_llm_by_type
+from src.deep_research.agents import create_agent
 from src.deep_research.prompts.planner_model import Plan
 from src.deep_research.prompts.template import apply_prompt_template
 from src.deep_research.tools import (

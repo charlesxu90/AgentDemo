@@ -1,3 +1,41 @@
+"""
+Alibaba Cloud Dashscope LLM Provider Integration
+
+This module provides a custom LangChain-compatible chat model for Alibaba Cloud's Dashscope API.
+It extends the base ChatOpenAI class to handle Dashscope-specific features and response formats.
+
+Key Functions:
+    _convert_delta_to_message_chunk(delta_dict, default_class): Converts streaming delta responses 
+        into LangChain message chunks with proper role and content handling
+    _convert_chunk_to_generation_chunk(chunk, default_chunk_class, generation_info): Transforms 
+        raw API response chunks into LangChain ChatGenerationChunk objects
+    
+Key Classes:
+    ChatDashscope: Custom chat model that extends ChatOpenAI for Dashscope compatibility
+        - Handles Dashscope-specific response formats and streaming
+        - Supports reasoning capabilities with thinking tokens
+        - Manages tool calling and function invocation
+        - Provides proper error handling and token counting
+
+Features:
+    - Streaming Response Support: Real-time token-by-token response streaming
+    - Tool Integration: Support for function calling and tool usage
+    - Reasoning Mode: Special handling for models with thinking capabilities
+    - Error Handling: Robust error handling with proper exception mapping
+    - Usage Tracking: Token usage metadata and cost tracking
+    - Callback Support: Integration with LangChain callback system
+
+Dashscope-Specific Handling:
+    - Custom message chunk conversion for role-based responses
+    - Support for thinking tokens in reasoning models
+    - Proper handling of function calls and tool responses
+    - Token usage calculation and metadata extraction
+    - Stream termination and final completion handling
+
+The module ensures compatibility between Dashscope's API format and LangChain's 
+expected interfaces, enabling seamless integration with the broader Deep Research workflow.
+"""
+
 # Copyright (c) 2025 charlesxu90
 # SPDX-License-Identifier: MIT
 
