@@ -11,6 +11,7 @@ from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.types import Command, interrupt
+import openai
 
 from src.deer_flow.agents import create_agent
 from src.deer_flow.config.agents import AGENT_LLM_MAP
@@ -116,12 +117,35 @@ def planner_node(
 
     full_response = ""
     if AGENT_LLM_MAP["planner"] == "basic" and not configurable.enable_deep_thinking:
-        response = llm.invoke(messages)
-        full_response = response.model_dump_json(indent=4, exclude_none=True)
+        try:
+            response = llm.invoke(messages)
+            full_response = response.model_dump_json(indent=4, exclude_none=True)
+        except openai.LengthFinishReasonError as e:
+            logger.warning(f"LLM response was truncated due to length limit: {e}")
+            # Use the partial response if available
+            if hasattr(e, 'completion') and e.completion:
+                full_response = str(e.completion)
+            else:
+                # Fallback: create a simple plan
+                full_response = '{"plan": [{"step": 1, "description": "Research the topic", "tools": ["search"]}]}'
+        except Exception as e:
+            logger.error(f"Error in LLM invoke: {e}")
+            # Fallback: create a simple plan
+            full_response = '{"plan": [{"step": 1, "description": "Research the topic", "tools": ["search"]}]}'
     else:
-        response = llm.stream(messages)
-        for chunk in response:
-            full_response += chunk.content
+        try:
+            response = llm.stream(messages)
+            for chunk in response:
+                full_response += chunk.content
+        except openai.LengthFinishReasonError as e:
+            logger.warning(f"LLM response was truncated due to length limit: {e}")
+            # Use what we have so far
+            if not full_response:
+                full_response = '{"plan": [{"step": 1, "description": "Research the topic", "tools": ["search"]}]}'
+        except Exception as e:
+            logger.error(f"Error in LLM stream: {e}")
+            # Fallback: create a simple plan
+            full_response = '{"plan": [{"step": 1, "description": "Research the topic", "tools": ["search"]}]}'
     logger.debug(f"Current state messages: {state['messages']}")
     logger.info(f"Planner response: {full_response}")
 

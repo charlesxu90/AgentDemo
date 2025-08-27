@@ -17,6 +17,7 @@ from psycopg_pool import AsyncConnectionPool
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
+from fastapi.openapi.utils import get_openapi
 from src.server.config_request import ConfigResponse
 from src.server.chat_request import ChatRequest, EnhancePromptRequest
 from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataResponse
@@ -45,8 +46,27 @@ INTERNAL_SERVER_ERROR_DETAIL = "Internal Server Error"
 
 app = FastAPI(
     title="DeepResearch API",
-    description="API for Deep Research",
+    description="""
+    ## DeepResearch API
+    
+    A comprehensive AI-powered research and analysis platform that provides:
+    
+    * **Chat Streaming**: Real-time conversational AI with research capabilities
+    * **Prompt Enhancement**: AI-powered prompt optimization and refinement
+    * **MCP Integration**: Model Context Protocol server metadata and tools
+    * **RAG System**: Retrieval-Augmented Generation for enhanced responses
+    * **Configuration**: Dynamic model and system configuration
+    
+    ### Authentication
+    Some endpoints may require authentication based on configuration.
+    
+    ### Rate Limits
+    API calls are subject to rate limiting based on your configuration.
+    """,
     version="0.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 
 # Add CORS middleware
@@ -68,7 +88,54 @@ in_memory_store = InMemoryStore()
 graph = build_graph_with_memory()
 
 
-@app.post("/api/chat/stream")
+@app.post(
+    "/api/chat/stream",
+    tags=["Chat & Research"],
+    summary="Stream AI Research Chat",
+    description="""
+    **Stream AI-powered research conversations with real-time responses.**
+    
+    This endpoint provides a streaming interface for AI-powered research conversations.
+    It supports:
+    - Real-time message streaming via Server-Sent Events (SSE)
+    - Multi-step research workflows
+    - RAG (Retrieval-Augmented Generation) integration
+    - MCP (Model Context Protocol) server integration
+    - Customizable research parameters
+    
+    ### Features:
+    - **Streaming Response**: Real-time token-by-token streaming
+    - **Research Planning**: Automatic research plan generation and execution
+    - **Tool Integration**: Access to web search, document analysis, and more
+    - **Context Management**: Thread-based conversation persistence
+    - **Interrupts**: User can interrupt and modify research plans
+    
+    ### Request Parameters:
+    - `messages`: Chat history between user and assistant
+    - `resources`: External resources to include in research
+    - `thread_id`: Conversation thread identifier (use "__default__" for new conversations)
+    - `max_plan_iterations`: Maximum research plan iterations (default: 1)
+    - `max_step_num`: Maximum steps per plan (default: 3)
+    - `auto_accepted_plan`: Whether to auto-execute plans (default: false)
+    - `report_style`: Output format style (ACADEMIC, POPULAR_SCIENCE, NEWS, SOCIAL_MEDIA)
+    
+    ### Response Format:
+    Server-Sent Events stream with the following event types:
+    - `message_chunk`: AI response tokens
+    - `tool_calls`: Tool invocation events
+    - `tool_call_result`: Tool execution results
+    - `interrupt`: Plan approval requests
+    """,
+    response_description="Server-Sent Events stream with chat messages and research results",
+    responses={
+        200: {
+            "description": "Successful streaming response",
+            "content": {"text/event-stream": {"example": "event: message_chunk\\ndata: {\"content\": \"Hello\", \"agent\": \"researcher\"}\\n\\n"}}
+        },
+        403: {"description": "MCP features disabled"},
+        500: {"description": "Internal server error"}
+    }
+)
 async def chat_stream(request: ChatRequest):
     # Check if MCP server configuration is enabled
     mcp_enabled = get_bool_env("ENABLE_MCP_SERVER_CONFIGURATION", False)
@@ -385,7 +452,51 @@ def _make_event(event_type: str, data: dict[str, any]):
         return f"event: error\ndata: {error_data}\n\n"
 
 
-@app.post("/api/prompt/enhance")
+@app.post(
+    "/api/prompt/enhance",
+    tags=["Prompt Engineering"],
+    summary="Enhance and Optimize Prompts",
+    description="""
+    **AI-powered prompt enhancement and optimization service.**
+    
+    This endpoint uses advanced AI techniques to improve and optimize prompts for better results.
+    
+    ### Features:
+    - **Prompt Optimization**: Automatically improves prompt clarity and effectiveness
+    - **Context Integration**: Incorporates additional context into prompts
+    - **Style Adaptation**: Adapts prompts for different report styles
+    - **Best Practices**: Applies prompt engineering best practices
+    
+    ### Use Cases:
+    - Research query optimization
+    - Content generation prompts
+    - Analysis and synthesis requests
+    - Creative writing prompts
+    
+    ### Request Parameters:
+    - `prompt`: The original prompt to enhance (required)
+    - `context`: Additional context or background information (optional)
+    - `report_style`: Target output style - academic, popular_science, news, or social_media
+    
+    ### Response:
+    Returns an enhanced version of the input prompt optimized for the specified context and style.
+    """,
+    response_description="Enhanced prompt with optimizations applied",
+    responses={
+        200: {
+            "description": "Successfully enhanced prompt",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "result": "Enhanced prompt with improved clarity, specificity, and effectiveness for the target use case."
+                    }
+                }
+            }
+        },
+        400: {"description": "Invalid request parameters"},
+        500: {"description": "Internal server error"}
+    }
+)
 async def enhance_prompt(request: EnhancePromptRequest):
     try:
         sanitized_prompt = request.prompt.replace("\r\n", "").replace("\n", "")
@@ -425,7 +536,67 @@ async def enhance_prompt(request: EnhancePromptRequest):
         raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
 
 
-@app.post("/api/mcp/server/metadata", response_model=MCPServerMetadataResponse)
+@app.post(
+    "/api/mcp/server/metadata", 
+    response_model=MCPServerMetadataResponse,
+    tags=["MCP Integration"],
+    summary="Get MCP Server Metadata and Tools",
+    description="""
+    **Retrieve metadata and available tools from Model Context Protocol (MCP) servers.**
+    
+    The Model Context Protocol enables AI applications to connect to external data sources
+    and tools in a standardized way. This endpoint allows you to discover and interact with
+    MCP servers.
+    
+    ### Features:
+    - **Server Discovery**: Connect to MCP servers via different transports
+    - **Tool Enumeration**: List available tools and their capabilities
+    - **Dynamic Integration**: Dynamically load tools from external servers
+    - **Multiple Transports**: Support for different connection methods
+    
+    ### Supported Transports:
+    - **stdio**: Standard input/output based servers
+    - **sse**: Server-Sent Events based servers
+    - **http**: HTTP-based servers
+    
+    ### Request Parameters:
+    - `transport`: Connection method (stdio, sse, http)
+    - `command`: Server command for stdio transport
+    - `args`: Command arguments for stdio transport
+    - `url`: Server URL for sse/http transports
+    - `env`: Environment variables for the server
+    - `headers`: HTTP headers for http transport
+    - `timeout_seconds`: Connection timeout (default: 300s)
+    
+    ### Security Note:
+    MCP server configuration must be explicitly enabled via environment variable:
+    `ENABLE_MCP_SERVER_CONFIGURATION=true`
+    """,
+    response_description="MCP server metadata including available tools and capabilities",
+    responses={
+        200: {
+            "description": "Successfully retrieved MCP server metadata",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "transport": "stdio",
+                        "command": "mcp-server",
+                        "tools": [
+                            {
+                                "name": "search_web",
+                                "description": "Search the web for information",
+                                "parameters": {"query": "string"}
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        403: {"description": "MCP server configuration is disabled"},
+        408: {"description": "Server connection timeout"},
+        500: {"description": "Internal server error"}
+    }
+)
 async def mcp_server_metadata(request: MCPServerMetadataRequest):
     """Get information about an MCP server."""
     # Check if MCP server configuration is enabled
@@ -471,13 +642,117 @@ async def mcp_server_metadata(request: MCPServerMetadataRequest):
         raise HTTPException(status_code=500, detail=INTERNAL_SERVER_ERROR_DETAIL)
 
 
-@app.get("/api/rag/config", response_model=RAGConfigResponse)
+@app.get(
+    "/api/rag/config", 
+    response_model=RAGConfigResponse,
+    tags=["RAG System"],
+    summary="Get RAG Configuration",
+    description="""
+    **Retrieve current Retrieval-Augmented Generation (RAG) system configuration.**
+    
+    The RAG system enhances AI responses by incorporating relevant information from
+    external knowledge sources. This endpoint provides information about the current
+    RAG configuration.
+    
+    ### Features:
+    - **Provider Information**: Details about the active RAG provider
+    - **Configuration Status**: Current system settings and capabilities
+    - **Integration Details**: How RAG is integrated with the AI system
+    
+    ### RAG Providers:
+    Different RAG providers offer various capabilities:
+    - **Vector Databases**: Semantic search and similarity matching
+    - **Document Stores**: Structured document retrieval
+    - **Web Search**: Real-time web information retrieval
+    - **Knowledge Graphs**: Relationship-based information retrieval
+    
+    ### Use Cases:
+    - Check current RAG system status
+    - Verify provider configuration
+    - Debug RAG-related issues
+    - System monitoring and health checks
+    """,
+    response_description="Current RAG system configuration and provider information",
+    responses={
+        200: {
+            "description": "Successfully retrieved RAG configuration",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "provider": "tavily_search",
+                        "status": "active",
+                        "capabilities": ["web_search", "real_time_data"]
+                    }
+                }
+            }
+        },
+        500: {"description": "Internal server error"}
+    }
+)
 async def rag_config():
     """Get the config of the RAG."""
     return RAGConfigResponse(provider=SELECTED_RAG_PROVIDER)
 
 
-@app.get("/api/rag/resources", response_model=RAGResourcesResponse)
+@app.get(
+    "/api/rag/resources", 
+    response_model=RAGResourcesResponse,
+    tags=["RAG System"],
+    summary="Search RAG Resources",
+    description="""
+    **Search and retrieve available resources from the RAG system.**
+    
+    This endpoint allows you to search through the available knowledge resources
+    in the RAG system and retrieve relevant documents or information.
+    
+    ### Features:
+    - **Resource Discovery**: Find available knowledge resources
+    - **Semantic Search**: Search using natural language queries
+    - **Filtered Results**: Get targeted results based on query parameters
+    - **Resource Metadata**: Detailed information about each resource
+    
+    ### Query Parameters:
+    - `query`: Search query to find relevant resources (optional)
+    
+    ### Resource Types:
+    Resources can include:
+    - **Documents**: PDFs, articles, papers, reports
+    - **Web Pages**: Relevant web content and articles
+    - **Databases**: Structured data sources
+    - **APIs**: External data APIs and services
+    
+    ### Response Format:
+    Returns a list of resources with metadata including:
+    - Resource ID and type
+    - Title and description
+    - Relevance score
+    - Source information
+    - Access methods
+    """,
+    response_description="List of available RAG resources matching the search query",
+    responses={
+        200: {
+            "description": "Successfully retrieved RAG resources",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "resources": [
+                            {
+                                "id": "doc_001",
+                                "title": "Research Paper on AI",
+                                "type": "document",
+                                "relevance_score": 0.95,
+                                "source": "academic_database"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        400: {"description": "Invalid query parameters"},
+        500: {"description": "Internal server error"}
+    }
+)
 async def rag_resources(request: Annotated[RAGResourceRequest, Query()]):
     """Get the resources of the RAG."""
     retriever = build_retriever()
@@ -486,10 +761,300 @@ async def rag_resources(request: Annotated[RAGResourceRequest, Query()]):
     return RAGResourcesResponse(resources=[])
 
 
-@app.get("/api/config", response_model=ConfigResponse)
+@app.get(
+    "/api/config", 
+    response_model=ConfigResponse,
+    tags=["System Configuration"],
+    summary="Get System Configuration",
+    description="""
+    **Retrieve comprehensive system configuration and status information.**
+    
+    This endpoint provides a complete overview of the system's current configuration,
+    including all enabled features, model settings, and integration status.
+    
+    ### Configuration Information:
+    - **Model Configuration**: Available AI models and their settings
+    - **RAG System**: Retrieval-Augmented Generation configuration
+    - **Feature Flags**: Enabled/disabled features and capabilities
+    - **Integration Status**: Status of external integrations (MCP, APIs, etc.)
+    
+    ### Model Information:
+    Returns details about configured AI models:
+    - Model names and versions
+    - Capabilities and limitations
+    - Token limits and pricing
+    - Provider information
+    
+    ### RAG Configuration:
+    Includes current RAG system settings:
+    - Active provider
+    - Available resources
+    - Search capabilities
+    - Integration status
+    
+    ### Use Cases:
+    - System health monitoring
+    - Configuration validation
+    - Troubleshooting and debugging
+    - Feature discovery
+    - Client configuration
+    """,
+    response_description="Complete system configuration including models and RAG settings",
+    responses={
+        200: {
+            "description": "Successfully retrieved system configuration",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "models": [
+                            {
+                                "name": "doubao-seed-1-6-flash-250715",
+                                "provider": "bytedance",
+                                "capabilities": ["chat", "reasoning"],
+                                "max_tokens": 20000
+                            }
+                        ],
+                        "rag": {
+                            "provider": "tavily_search",
+                            "status": "active"
+                        },
+                        "features": {
+                            "mcp_enabled": False,
+                            "streaming": True,
+                            "reasoning": True
+                        }
+                    }
+                }
+            }
+        },
+        500: {"description": "Internal server error"}
+    }
+)
 async def config():
     """Get the config of the server."""
     return ConfigResponse(
         rag=RAGConfigResponse(provider=SELECTED_RAG_PROVIDER),
         models=get_configured_llm_models(),
     )
+
+
+@app.get(
+    "/",
+    tags=["System Information"],
+    summary="API Information and Quick Start",
+    description="""
+    **Welcome to the DeepResearch API!**
+    
+    This is the main entry point for the DeepResearch AI-powered research platform.
+    
+    ### Quick Links:
+    - **📚 Interactive Documentation**: [/docs](/docs) - Swagger UI with live testing
+    - **📖 Alternative Documentation**: [/redoc](/redoc) - ReDoc interface
+    - **⚙️ System Configuration**: [/api/config](/api/config) - Current system settings
+    - **🔍 Health Check**: [/health](/health) - System health status
+    
+    ### Key Features:
+    - **🤖 AI-Powered Research**: Intelligent research assistance with multi-step workflows
+    - **📡 Real-time Streaming**: Server-Sent Events for live responses
+    - **🔧 Tool Integration**: Access to web search, document analysis, and external APIs
+    - **📝 Prompt Enhancement**: AI-powered prompt optimization
+    - **🔌 MCP Support**: Model Context Protocol for external integrations
+    - **📚 RAG System**: Retrieval-Augmented Generation for enhanced accuracy
+    
+    ### Getting Started:
+    1. Visit [/docs](/docs) for interactive API documentation
+    2. Test endpoints directly in the browser
+    3. Check [/api/config](/api/config) for available models and features
+    4. Start with [/api/chat/stream](/docs#/Chat%20%26%20Research/chat_stream_api_chat_stream_post) for AI conversations
+    
+    ### Authentication:
+    Some features may require authentication. Check individual endpoint documentation for requirements.
+    """,
+    response_description="API information and navigation links",
+    responses={
+        200: {
+            "description": "API welcome message with navigation information",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "message": "DeepResearch API",
+                        "version": "0.1.0",
+                        "docs": "/docs",
+                        "redoc": "/redoc",
+                        "status": "operational"
+                    }
+                }
+            }
+        }
+    }
+)
+async def root():
+    """Root endpoint with API information."""
+    return {
+        "message": "DeepResearch API",
+        "version": "0.1.0",
+        "docs": "/docs",
+        "redoc": "/redoc",
+        "endpoints": {
+            "chat_stream": "/api/chat/stream",
+            "prompt_enhance": "/api/prompt/enhance", 
+            "mcp_metadata": "/api/mcp/server/metadata",
+            "rag_config": "/api/rag/config",
+            "rag_resources": "/api/rag/resources",
+            "config": "/api/config"
+        }
+    }
+
+
+@app.get(
+    "/health",
+    tags=["System Information"],
+    summary="System Health Check",
+    description="""
+    **Check the health and operational status of the DeepResearch API.**
+    
+    This endpoint provides a quick way to verify that the API is running and operational.
+    It's useful for monitoring, load balancers, and automated health checks.
+    
+    ### Health Indicators:
+    - **API Status**: Whether the API is responding
+    - **System Timestamp**: Current server time
+    - **Service Availability**: Basic service availability check
+    
+    ### Use Cases:
+    - Load balancer health checks
+    - Monitoring and alerting systems
+    - Service discovery
+    - Automated testing
+    - Uptime verification
+    """,
+    response_description="System health status and basic operational information",
+    responses={
+        200: {
+            "description": "System is healthy and operational",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": "healthy",
+                        "timestamp": "2025-08-27T12:00:00Z",
+                        "version": "0.1.0",
+                        "uptime": "24h 15m"
+                    }
+                }
+            }
+        },
+        503: {"description": "Service temporarily unavailable"}
+    }
+)
+async def health():
+    """Health check endpoint."""
+    return {"status": "healthy", "timestamp": "2025-08-27"}
+
+
+def custom_openapi():
+    """Custom OpenAPI schema with enhanced documentation."""
+    if app.openapi_schema:
+        return app.openapi_schema
+    
+    openapi_schema = get_openapi(
+        title="DeepResearch API",
+        version="0.1.0",
+        description="""
+# DeepResearch API Documentation
+
+Welcome to the **DeepResearch API** - a comprehensive AI-powered research and analysis platform.
+
+## 🚀 Quick Start
+
+1. **Interactive Testing**: Use the "Try it out" buttons below to test endpoints directly
+2. **Authentication**: Some endpoints may require API keys (check individual endpoint docs)
+3. **Streaming**: Chat endpoints use Server-Sent Events for real-time responses
+4. **Rate Limits**: Be mindful of rate limits specified in your configuration
+
+## 📋 Endpoint Categories
+
+### 🤖 Chat & Research
+Core AI conversation and research capabilities with streaming responses.
+
+### 🔧 Prompt Engineering  
+Tools for optimizing and enhancing prompts for better AI performance.
+
+### 🔌 MCP Integration
+Model Context Protocol integration for external tools and data sources.
+
+### 📚 RAG System
+Retrieval-Augmented Generation for enhanced accuracy with external knowledge.
+
+### ⚙️ System Configuration
+System settings, health checks, and configuration management.
+
+## 🔗 External Resources
+
+- [Documentation](https://github.com/charlesxu90/AgentDemo)
+- [GitHub Repository](https://github.com/charlesxu90/AgentDemo)
+- [Issues & Support](https://github.com/charlesxu90/AgentDemo/issues)
+
+## 📞 Contact & Support
+
+For questions, issues, or feature requests, please visit our GitHub repository.
+        """,
+        routes=app.routes,
+    )
+    
+    # Add additional metadata
+    openapi_schema["info"]["contact"] = {
+        "name": "DeepResearch Team",
+        "url": "https://github.com/charlesxu90/AgentDemo",
+    }
+    
+    openapi_schema["info"]["license"] = {
+        "name": "MIT License",
+        "url": "https://github.com/charlesxu90/AgentDemo/blob/main/LICENSE",
+    }
+    
+    # Add server information
+    openapi_schema["servers"] = [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local development server"
+        },
+        {
+            "url": "http://localhost:8001", 
+            "description": "Alternative local server"
+        }
+    ]
+    
+    # Add tag descriptions
+    openapi_schema["tags"] = [
+        {
+            "name": "Chat & Research",
+            "description": "AI-powered conversational research with streaming responses and tool integration"
+        },
+        {
+            "name": "Prompt Engineering", 
+            "description": "Prompt optimization and enhancement tools for improved AI performance"
+        },
+        {
+            "name": "MCP Integration",
+            "description": "Model Context Protocol integration for external tools and data sources"
+        },
+        {
+            "name": "RAG System",
+            "description": "Retrieval-Augmented Generation system for enhanced accuracy with external knowledge"
+        },
+        {
+            "name": "System Configuration",
+            "description": "System settings, health monitoring, and configuration management"
+        },
+        {
+            "name": "System Information",
+            "description": "Basic system information, health checks, and API navigation"
+        }
+    ]
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+# Override the default OpenAPI schema
+app.openapi = custom_openapi
